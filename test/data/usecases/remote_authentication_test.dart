@@ -13,8 +13,9 @@ void main() {
   final httpClient = HttpClientSpy();
   final url = faker.internet.httpUrl();
   final sut = RemoteAuthentication(httpClient: httpClient, url: url);
+  AuthenticationParams params;
   test('Should call HttpClient with correct URL', () async {
-    final params = AuthenticationParams(email: faker.internet.email(), password: faker.internet.password());
+    params = AuthenticationParams(email: faker.internet.email(), password: faker.internet.password());
     await sut.auth(params);
 
     verify(httpClient.request(
@@ -27,7 +28,7 @@ void main() {
   test('Should throw UnexpectError if HttpClient returns 400', () async {
     when(httpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body'))).thenThrow(HttpError.badRequest);
 
-    final params = AuthenticationParams(email: faker.internet.email(), password: faker.internet.password());
+    params = AuthenticationParams(email: faker.internet.email(), password: faker.internet.password());
     final future = sut.auth(params);
 
     expect(future, throwsA(DomainError.unexpected));
