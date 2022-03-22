@@ -15,7 +15,17 @@ void main() {
   final sut = RemoteAuthentication(httpClient: httpClient, url: url);
   AuthenticationParams params;
   test('Should call HttpClient with correct URL', () async {
-    params = AuthenticationParams(email: faker.internet.email(), password: faker.internet.password());
+    params = AuthenticationParams(
+        email: faker.internet.email(), password: faker.internet.password());
+
+    final accessToken = faker.guid.guid();
+    when(httpClient.request(
+            url: anyNamed('url'),
+            method: anyNamed('method'),
+            body: anyNamed('body')))
+        .thenAnswer((_) async =>
+            {'accessToken': accessToken, 'name': faker.person.name()});
+
     await sut.auth(params);
 
     verify(httpClient.request(
@@ -26,38 +36,76 @@ void main() {
   });
 
   test('Should throw UnexpectError if HttpClient returns 400', () async {
-    when(httpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body'))).thenThrow(HttpError.badRequest);
+    when(httpClient.request(
+            url: anyNamed('url'),
+            method: anyNamed('method'),
+            body: anyNamed('body')))
+        .thenThrow(HttpError.badRequest);
 
-    params = AuthenticationParams(email: faker.internet.email(), password: faker.internet.password());
+    params = AuthenticationParams(
+        email: faker.internet.email(), password: faker.internet.password());
     final future = sut.auth(params);
 
     expect(future, throwsA(DomainError.unexpected));
   });
 
   test('Should throw UnexpectError if HttpClient returns 404', () async {
-    when(httpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body'))).thenThrow(HttpError.notFound);
+    when(httpClient.request(
+            url: anyNamed('url'),
+            method: anyNamed('method'),
+            body: anyNamed('body')))
+        .thenThrow(HttpError.notFound);
 
-    params = AuthenticationParams(email: faker.internet.email(), password: faker.internet.password());
+    params = AuthenticationParams(
+        email: faker.internet.email(), password: faker.internet.password());
     final future = sut.auth(params);
 
     expect(future, throwsA(DomainError.unexpected));
   });
 
   test('Should throw UnexpectError if HttpClient returns 500', () async {
-    when(httpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body'))).thenThrow(HttpError.serverError);
+    when(httpClient.request(
+            url: anyNamed('url'),
+            method: anyNamed('method'),
+            body: anyNamed('body')))
+        .thenThrow(HttpError.serverError);
 
-    params = AuthenticationParams(email: faker.internet.email(), password: faker.internet.password());
+    params = AuthenticationParams(
+        email: faker.internet.email(), password: faker.internet.password());
     final future = sut.auth(params);
 
     expect(future, throwsA(DomainError.unexpected));
   });
 
-  test('Should throw InvalidCredentialsError if HttpClient returns 401', () async {
-    when(httpClient.request(url: anyNamed('url'), method: anyNamed('method'), body: anyNamed('body'))).thenThrow(HttpError.unauthorized);
+  test('Should throw InvalidCredentialsError if HttpClient returns 401',
+      () async {
+    when(httpClient.request(
+            url: anyNamed('url'),
+            method: anyNamed('method'),
+            body: anyNamed('body')))
+        .thenThrow(HttpError.unauthorized);
 
-    params = AuthenticationParams(email: faker.internet.email(), password: faker.internet.password());
+    params = AuthenticationParams(
+        email: faker.internet.email(), password: faker.internet.password());
     final future = sut.auth(params);
 
     expect(future, throwsA(DomainError.invalidCredenctials));
+  });
+
+  test('Should return an Account if HttpClient returns 200', () async {
+    final accessToken = faker.guid.guid();
+    when(httpClient.request(
+            url: anyNamed('url'),
+            method: anyNamed('method'),
+            body: anyNamed('body')))
+        .thenAnswer((_) async =>
+            {'accessToken': accessToken, 'name': faker.person.name()});
+
+    params = AuthenticationParams(
+        email: faker.internet.email(), password: faker.internet.password());
+
+    final account = await sut.auth(params);
+
+    expect(account?.token, accessToken);
   });
 }
