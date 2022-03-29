@@ -1,4 +1,4 @@
 enum DomainError {
   unexpected,
-  invalidCredenctials,
+  invalidCredentials,
 }
