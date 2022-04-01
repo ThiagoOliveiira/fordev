@@ -32,7 +32,7 @@ class App extends StatelessWidget {
           focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: primaryColor),
           ),
-          alignLabelWithHint: false,
+          alignLabelWithHint: true,
         ),
         buttonTheme: ButtonThemeData(
           colorScheme: ColorScheme.light(primary: primaryColor),
