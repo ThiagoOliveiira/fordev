@@ -27,11 +27,8 @@ class LoginPage extends StatelessWidget {
                       return TextFormField(
                         decoration: InputDecoration(
                           labelText: "Email",
-                          icon: Icon(Icons.email,
-                              color: Theme.of(context).primaryColorLight),
-                          errorText: snapshot.data?.isEmpty == true
-                              ? null
-                              : snapshot.data,
+                          icon: Icon(Icons.email, color: Theme.of(context).primaryColorLight),
+                          errorText: snapshot.data?.isEmpty == true ? null : snapshot.data,
                         ),
                         keyboardType: TextInputType.emailAddress,
                         onChanged: presenter.validateEmail,
@@ -50,9 +47,7 @@ class LoginPage extends StatelessWidget {
                               Icons.lock,
                               color: Theme.of(context).primaryColorLight,
                             ),
-                            errorText: snapshot.data?.isEmpty == true
-                                ? null
-                                : snapshot.data,
+                            errorText: snapshot.data?.isEmpty == true ? null : snapshot.data,
                           ),
                           obscureText: true,
                           onChanged: presenter.validatePassword,
@@ -64,7 +59,7 @@ class LoginPage extends StatelessWidget {
                       stream: presenter.isFormValidController,
                       builder: (context, snapshot) {
                         return RaisedButton(
-                          onPressed: snapshot.data == true ? () {} : null,
+                          onPressed: snapshot.data == true ? presenter.auth : null,
                           child: Text("Entrar".toUpperCase()),
                         );
                       }),
