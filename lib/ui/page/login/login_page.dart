@@ -39,6 +39,19 @@ class LoginPage extends StatelessWidget {
               }
             }
           });
+
+          presenter.mainErrorStream.listen((error) {
+            if (error != null) {
+              Scaffold.of(context).showSnackBar(SnackBar(
+                backgroundColor: Colors.red[900],
+                content: Text(
+                  error,
+                  textAlign: TextAlign.center,
+                ),
+              ));
+            }
+          });
+
           return SingleChildScrollView(
               child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -56,8 +69,11 @@ class LoginPage extends StatelessWidget {
                           return TextFormField(
                             decoration: InputDecoration(
                               labelText: "Email",
-                              icon: Icon(Icons.email, color: Theme.of(context).primaryColorLight),
-                              errorText: snapshot.data?.isEmpty == true ? null : snapshot.data,
+                              icon: Icon(Icons.email,
+                                  color: Theme.of(context).primaryColorLight),
+                              errorText: snapshot.data?.isEmpty == true
+                                  ? null
+                                  : snapshot.data,
                             ),
                             keyboardType: TextInputType.emailAddress,
                             onChanged: presenter.validateEmail,
@@ -76,7 +92,9 @@ class LoginPage extends StatelessWidget {
                                   Icons.lock,
                                   color: Theme.of(context).primaryColorLight,
                                 ),
-                                errorText: snapshot.data?.isEmpty == true ? null : snapshot.data,
+                                errorText: snapshot.data?.isEmpty == true
+                                    ? null
+                                    : snapshot.data,
                               ),
                               obscureText: true,
                               onChanged: presenter.validatePassword,
@@ -88,7 +106,8 @@ class LoginPage extends StatelessWidget {
                           stream: presenter.isFormValidStream,
                           builder: (context, snapshot) {
                             return RaisedButton(
-                              onPressed: snapshot.data == true ? presenter.auth : null,
+                              onPressed:
+                                  snapshot.data == true ? presenter.auth : null,
                               child: Text("Entrar".toUpperCase()),
                             );
                           }),
