@@ -11,10 +11,9 @@ void main() {
   StreamLoginPresenter sut;
   ValidationSpy validation;
   String email;
+  String password;
 
-  PostExpectation mockValidationCall(String field) => when(validation.validate(
-      field: field == null ? anyNamed('field') : field,
-      value: anyNamed('value')));
+  PostExpectation mockValidationCall(String field) => when(validation.validate(field: field == null ? anyNamed('field') : field, value: anyNamed('value')));
 
   void mockValidation({String field, String value}) {
     mockValidationCall(field).thenReturn(value);
@@ -24,6 +23,7 @@ void main() {
     validation = ValidationSpy();
     sut = StreamLoginPresenter(validation: validation);
     email = faker.internet.email();
+    password = faker.internet.password();
     mockValidation();
   });
   test('Should call Validation with correct email', () {
@@ -35,10 +35,8 @@ void main() {
   test('Should emit email error if valdiation fails', () {
     mockValidation(value: 'error');
 
-    sut.emailErrorStream
-        .listen(expectAsync1((error) => expect(error, 'error')));
-    sut.isFormValidStream
-        .listen(expectAsync1((isValid) => expect(isValid, false)));
+    sut.emailErrorStream.listen(expectAsync1((error) => expect(error, 'error')));
+    sut.isFormValidStream.listen(expectAsync1((isValid) => expect(isValid, false)));
 
     sut.validateEmail(email);
     sut.validateEmail(email);
@@ -46,8 +44,14 @@ void main() {
 
   test('Should emit null if validation succeeds', () {
     sut.emailErrorStream.listen(expectAsync1((error) => expect(error, null)));
-    sut.isFormValidStream
-        .listen(expectAsync1((isValid) => expect(isValid, false)));
+    sut.isFormValidStream.listen(expectAsync1((isValid) => expect(isValid, false)));
+
+    sut.validateEmail(email);
+    sut.validateEmail(email);
+  });
+
+  test('Should call Validation with correct password', () {
+    sut.validatePassword(password);
 
     sut.validateEmail(email);
     sut.validateEmail(email);
