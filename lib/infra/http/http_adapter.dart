@@ -21,7 +21,6 @@ class HttpAdapter implements HttpClient {
     try {
       if (method == 'post') {
         response = await client.post(url, headers: headers, body: jsonBody);
-        // print(response);
       }
     } catch (error) {
       throw HttpError.serverError;
@@ -30,7 +29,6 @@ class HttpAdapter implements HttpClient {
   }
 
   Map _handleResponse(Response response) {
-    print(response);
     if (response.statusCode == 200) {
       return response.body.isEmpty ? null : jsonDecode(response.body);
     } else if (response.statusCode == 204) {

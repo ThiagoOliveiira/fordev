@@ -52,11 +52,8 @@ class StreamLoginPresenter implements LoginPresenter {
     _state.isLoading = true;
     _update();
     try {
-      print(_state.email);
-      print(_state.password);
       await authentication.auth(AuthenticationParams(email: _state.email, secret: _state.password));
     } on DomainError catch (error) {
-      print(error);
       _state.mainError = error.description;
     }
     _state.isLoading = false;
