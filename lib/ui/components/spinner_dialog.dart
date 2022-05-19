@@ -9,7 +9,9 @@ void showLoading(BuildContext context) {
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircularProgressIndicator(),
+            CircularProgressIndicator(
+              backgroundColor: Colors.amber,
+            ),
             SizedBox(height: 10),
             Text(
               "Agurde...",

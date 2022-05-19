@@ -12,14 +12,16 @@ class HttpAdapter implements HttpClient {
 
   Future<Map> request({@required String url, @required String method, Map body}) async {
     final headers = {
-      'content-type': 'application',
-      'accept': 'applcation/json',
+      'content-type': 'application/json',
+      'accept': 'application/json',
     };
     final jsonBody = body != null ? jsonEncode(body) : null;
     var response = Response('', 500);
+
     try {
       if (method == 'post') {
         response = await client.post(url, headers: headers, body: jsonBody);
+        // print(response);
       }
     } catch (error) {
       throw HttpError.serverError;
@@ -28,6 +30,7 @@ class HttpAdapter implements HttpClient {
   }
 
   Map _handleResponse(Response response) {
+    print(response);
     if (response.statusCode == 200) {
       return response.body.isEmpty ? null : jsonDecode(response.body);
     } else if (response.statusCode == 204) {
