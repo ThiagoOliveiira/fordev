@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-import '../protocols/procotols.dart';
+import '../protocols/protocols.dart';
 import '../../presentation/protocols/protocols.dart';
 
 class ValidationComposite implements Validation {

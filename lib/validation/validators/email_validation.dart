@@ -1,7 +1,12 @@
-import '../protocols/procotols.dart';
+import 'package:equatable/equatable.dart';
 
-class EmailValidation implements FieldValidation {
+import '../protocols/protocols.dart';
+
+class EmailValidation extends Equatable implements FieldValidation {
   final String field;
+
+  @override
+  List<Object> get props => [field];
 
   EmailValidation(this.field);
 
